@@ -1,0 +1,91 @@
+/* 空的 index.scss 文件，用于修复样式导入报错 */
+
+.app-container {
+  height: 100%;
+  .search-bar {
+    padding: 18px 0 0 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e4e7ed;
+    border-radius: 5px;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+  }
+  .content-body {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 5px;
+    overflow: auto;
+    background: #ffffff;
+
+    .charts-container {
+      display: flex;
+      flex: 1;
+
+      .chart-item {
+        flex: 1;
+        min-height: 300px;
+        padding: 20px;
+
+        @media (max-width: 768px) {
+          width: 100%;
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+
+    .trend-container {
+      position: relative;
+      flex: 1;
+      min-height: 300px;
+      padding: 20px;
+
+      @media (max-width: 768px) {
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 10px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 5px;
+      .charts-container {
+        .chart-item {
+          padding: 5px;
+        }
+      }
+      .trend-container {
+        padding: 5px;
+      }
+    }
+  }
+}
+
+.line-select {
+  position: absolute;
+  right: 50px;
+  z-index: 1;
+  .popper-options {
+    position: absolute !important;
+    top: 20px !important;
+    z-index: 1000 !important;
+    width: 250px !important;
+    background: #ffffff !important;
+    .el-select-dropdown {
+      padding: 0;
+      border: 1px solid #dcdfe6;
+    }
+  }
+  .el-select__popper.el-popper,
+  .el-select__popper.el-popper .el-popper__arrow:before {
+    border: none !important;
+  }
+  .el-popper__arrow {
+    display: none !important;
+  }
+}

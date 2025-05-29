@@ -1,0 +1,90 @@
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('@/assets/images/login-background.jpg');
+  background-size: cover;
+
+  .login-box {
+    z-index: 1;
+    width: 380px;
+    padding: 40px;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: var(--el-box-shadow-light);
+
+    // 添加以下样式以提高优先级
+    :global(.ant-input),
+    :global(.ant-input-password),
+    :global(.ant-input-affix-wrapper) {
+      height: 48px !important;
+      min-height: 48px !important;
+      line-height: 48px !important;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-title {
+      font-size: 24px;
+      font-weight: 600;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0 20px;
+      text-align: center;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .captcha-img {
+      height: 48px;
+      cursor: pointer;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+
+    .third-party-login {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      color: var(--el-text-color-secondary);
+
+      *:not(:first-child) {
+        margin-left: 20px;
+      }
+
+      .icon {
+        cursor: pointer;
+      }
+    }
+
+    &-form {
+      width: 320px;
+    }
+
+    .login-btn {
+      width: 100%;
+    }
+
+    .no-margin {
+      margin-bottom: 0;
+    }
+
+    @media (width <= 460px) {
+      width: 100%;
+      padding: 20px;
+    }
+  }
+}
