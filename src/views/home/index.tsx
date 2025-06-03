@@ -3,6 +3,7 @@ import { Form, Select, Button } from 'antd';
 import StackedBarChart from './components/StackedBarChart';
 import LineChart from './components/lineChart';
 import HomeAPI from '@/api/home';
+import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { BankDataItem } from './hooks/useHome';
 import { useBankOptions, useBatchNoOptions, useModelOptions, formatChartData } from './hooks/useHome';
 import './index.less';
@@ -91,7 +92,7 @@ const HomePage: React.FC = () => {
   return (
     <div className='app-container' ref={containerRef}>
       <div ref={searchBarRef} className='search-bar'>
-        <Form form={form} layout='inline' onFinish={onFinish} style={{ marginBottom: 16 }}>
+        <Form form={form} layout='inline' onFinish={onFinish}>
           <Form.Item name='bankCode' label='机构'>
             <Select options={bankOptions} placeholder='请选择机构' allowClear style={{ width: 250 }} />
           </Form.Item>
@@ -99,10 +100,10 @@ const HomePage: React.FC = () => {
             <Select options={batchNoOptions} placeholder='请选择批次号' allowClear style={{ width: 250 }} />
           </Form.Item>
           <Form.Item>
-            <Button type='primary' htmlType='submit'>
+            <Button type='primary' icon={<SearchOutlined />} htmlType='submit'>
               搜索
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={onReset}>
+            <Button style={{ marginLeft: 8 }} icon={<ReloadOutlined />} onClick={onReset}>
               重置
             </Button>
           </Form.Item>

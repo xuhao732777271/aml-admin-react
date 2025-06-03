@@ -1,0 +1,58 @@
+.crudContainer {
+  display: flex;
+  gap: 8px; // equivalent to space-x-2 with flex
+  height: 100%; // Ensure container takes full height if parent allows
+}
+
+.leftCard {
+  min-width: 310px;
+  max-width: 310px;
+  // flex-x-center and text-center can be handled by Ant Design Card's body styling or inner divs
+  // Example: You might need to add text-align: center; to the card body if needed.
+  // Height should be handled by parent or flex properties if in a flex container
+  height: 100%;
+}
+
+.rightCard {
+  flex-grow: 1; // Allows the right card to take up remaining space
+  width: calc(100% - 318px); // Account for left card width + gap (310px + 8px)
+  height: 100%;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 16px 0; // Add some bottom padding if needed
+  border-bottom: 1px solid #f0f0f0; // Add a border similar to default AntD card title
+  margin-bottom: 16px; // Add margin after the header
+}
+
+.title {
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-left: 4px; // Equivalent to ml-1
+  }
+}
+
+.paramTable {
+  padding: 8px; // Equivalent to p-8
+  background-color: #f8f8f9; // Equivalent background color
+}
+
+.noParams {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  background-color: #f8f8f9;
+  font-weight: bold;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; // Equivalent to mt-[20px]
+}
