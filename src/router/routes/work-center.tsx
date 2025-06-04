@@ -10,7 +10,7 @@ const workCenterRoute: RouteObject = {
   element: <LayoutGuard />,
   meta: {
     title: '工作中心',
-    icon: 'work',
+    icon: 'compo',
     orderNo: 2
   },
   children: [

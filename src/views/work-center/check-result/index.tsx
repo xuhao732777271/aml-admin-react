@@ -5,17 +5,15 @@ import {
   SearchOutlined,
   WarningFilled,
   CheckCircleFilled,
-  CloseCircleFilled,
-  CarOutlined
+  CloseCircleFilled
 } from '@ant-design/icons';
-import styled from 'styled-components';
 import dayjs from 'dayjs';
-import IMG from '@/assets/imgs/rock.png';
+import IMG from '@/assets/images/rock.png';
 import ImportModelAPI from '@/api/model';
 import { findNodesByType, saveFile } from '@/utils';
-import DetailModal from '@/views/work/components/DetailModal';
 import PageResultAPI from '@/api/result';
 import './index.less';
+
 const CheckResult: React.FC = () => {
   const [process, setProcess] = useState(0);
   const [disabled, setDisabled] = useState(true);
@@ -23,9 +21,9 @@ const CheckResult: React.FC = () => {
   const [batchNo, setBatchNo] = useState('');
   const [batchNoDialogVisible, setBatchNoDialogVisible] = useState(false);
   const [allBatchNoList, setAllBatchNoList] = useState([]);
-  const [modalCheckInfo, setModalCheckInfo] = useState({});
+  // const [modalCheckInfo, setModalCheckInfo] = useState({});
   const [treeData, setTreeData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false); // 详情弹框
   const procRef = useRef<NodeJS.Timeout>();
 
   const customColor = '#3b6cde';
@@ -88,8 +86,9 @@ const CheckResult: React.FC = () => {
   };
 
   const setModalDetail = (row: any) => {
-    setModalCheckInfo(row);
-    setShowModal(true);
+    console.log(row);
+    // setModalCheckInfo(row);
+    // setShowModal(true);
   };
 
   const resetCheckPost = () => {
@@ -201,8 +200,8 @@ const CheckResult: React.FC = () => {
         }
       >
         <div className='image-container'>
-          <img src={IMG} height={200} isAnimating={process < 100} />
-          {process < 100 && <SearchIcon style={{ fontSize: 60 }} />}
+          <img src={IMG} height={200} />
+          {process < 100 && <SearchOutlined style={{ fontSize: 60 }} />}
         </div>
         <p>
           扫描进度
@@ -233,14 +232,15 @@ const CheckResult: React.FC = () => {
         <Button
           style={{ width: 130, marginTop: 30 }}
           size='large'
-          type={disabled ? 'default' : 'warning'}
+          color={disabled ? 'default' : 'orange'}
+          variant='solid'
           disabled={disabled}
           onClick={downloadReport}
         >
           下载报告
         </Button>
         <p>提交检测时间：{checkInfo?.checkDate ?? ''}</p>
-        <Button style={{ width: 130, marginTop: 30 }} size='large' type='warning' onClick={showDialog}>
+        <Button style={{ width: 130, marginTop: 30 }} size='large' type='primary' onClick={showDialog}>
           下载历史报告
         </Button>
 
@@ -262,8 +262,12 @@ const CheckResult: React.FC = () => {
       </Card>
 
       <Card className='right-card' title='检测结果'>
-        <Tree treeData={treeData} fieldNames={props} height={208} defaultExpandAll titleRender={renderTreeTitle} />
-        <DetailModal visible={showModal} info={modalCheckInfo} title='检测结果' onVisibleChange={setShowModal} />
+        <Tree
+          treeData={treeData}
+          fieldNames={props}
+          defaultExpandAll
+          titleRender={node => renderTreeTitle(node, treeData)}
+        />
       </Card>
     </div>
   );

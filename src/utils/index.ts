@@ -85,3 +85,41 @@ export const downloadFileByFileId = async (record: any) => {
     message.error('文件下载失败');
   }
 };
+
+/**
+ * 从树中找出匹配节点
+ *
+ * @param {array} data 树
+ * @param {string} key 键值
+ * @param {string} value 值
+ * @returns {array} 匹配结果
+ */
+export function findNodesByType<T extends Record<string, any>>(data: T[], key: keyof T, value: string) {
+  const result: T[] = [];
+  function traverse(node: T) {
+    if (node[key] === value) {
+      result.push(node);
+    }
+    if (node.children && node.children.length > 0) {
+      node.children.forEach((child: T) => traverse(child));
+    }
+  }
+  data.forEach(node => traverse(node));
+  return result;
+}
+
+/** 浏览器保存文件 */
+export function saveFile(fileData: any, fileName: string, fileType: string) {
+  const blob = new Blob([fileData], { type: fileType });
+  const downloadUrl = window.URL.createObjectURL(blob);
+
+  const downloadLink = document.createElement('a');
+  downloadLink.href = downloadUrl;
+  downloadLink.download = fileName;
+
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+
+  document.body.removeChild(downloadLink);
+  window.URL.revokeObjectURL(downloadUrl);
+}
