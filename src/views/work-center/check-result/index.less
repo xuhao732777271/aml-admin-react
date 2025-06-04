@@ -1,51 +1,57 @@
-.crudContainer {
+.crud-container {
+  width: 100%;
+  height: calc(100% - 5px);
   display: flex;
-  gap: 8px; // equivalent to space-x-2 with flex
-  height: 100%; // Ensure container takes full height if parent allows
+  gap: 8px;
 }
 
-.leftCard {
-  min-width: 310px;
-  max-width: 310px;
-  // flex-x-center and text-center can be handled by Ant Design Card's body styling or inner divs
-  // Example: You might need to add text-align: center; to the card body if needed.
-  // Height should be handled by parent or flex properties if in a flex container
+.left-card {
   height: 100%;
+  width: 310px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: auto;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
 }
 
-.rightCard {
-  flex-grow: 1; // Allows the right card to take up remaining space
-  width: calc(100% - 318px); // Account for left card width + gap (310px + 8px)
+.right-card {
   height: 100%;
+  width: calc(100% - 320px);
+  padding: 15px;
+  border-radius: 8px;
+  background: #fff;
+  overflow: auto;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
 }
 
-.cardHeader {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0 16px 0; // Add some bottom padding if needed
-  border-bottom: 1px solid #f0f0f0; // Add a border similar to default AntD card title
-  margin-bottom: 16px; // Add margin after the header
+  width: 100%;
+  padding: 8px 16px 8px 0;
 }
 
 .title {
   display: flex;
   align-items: center;
-
-  span {
-    margin-left: 4px; // Equivalent to ml-1
-  }
+  gap: 8px;
 }
 
-.paramTable {
-  padding: 8px; // Equivalent to p-8
-  background-color: #f8f8f9; // Equivalent background color
+.param-table {
+  padding: 8px;
+  background-color: #f8f8f9;
 }
 
-.noParams {
+.no-params {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 100px;
   background-color: #f8f8f9;
   font-weight: bold;
@@ -54,5 +60,5 @@
 .footer {
   display: flex;
   justify-content: center;
-  margin-top: 20px; // Equivalent to mt-[20px]
+  margin-top: 20px;
 }

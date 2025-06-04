@@ -71,7 +71,10 @@ export function useModelOptions() {
  * 图表数据格式化
  */
 export function formatChartData(data: BankDataItem[] = []) {
-  const formatBankName = (str: string = '') => str.replace(/^[\d-]+/, '');
+  const formatBankName = (str: string | null | undefined) => {
+    if (!str) return '';
+    return str.replace(/^[\d-]+/, '');
+  };
   return {
     xAxisDatas: data.map(item => item?.RULE_NAME || item?.AUTO_CHECK_ID || formatBankName(item?.bankName) || ''),
     successDatas: data.map(item => item.successCount),
