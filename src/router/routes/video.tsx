@@ -11,7 +11,7 @@ const VideoRoute: RouteObject = {
   meta: {
     title: '视频处理',
     icon: 'video',
-    orderNo: 5
+    orderNo: 15
   },
   children: [
     {

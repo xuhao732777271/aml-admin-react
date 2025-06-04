@@ -11,7 +11,7 @@ const CompoRoute: RouteObject = {
   meta: {
     title: '组件',
     icon: 'compo',
-    orderNo: 6
+    orderNo: 16
   },
   children: [
     {

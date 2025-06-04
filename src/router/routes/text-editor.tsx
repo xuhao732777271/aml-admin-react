@@ -11,7 +11,7 @@ const TextEditorRoute: RouteObject = {
   meta: {
     title: '文本编辑器',
     icon: 'editor',
-    orderNo: 7
+    orderNo: 17
   },
   children: [
     {

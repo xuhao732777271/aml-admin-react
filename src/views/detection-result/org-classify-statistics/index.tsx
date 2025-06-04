@@ -1,40 +1,44 @@
 import type { ColumnsType } from 'antd/es/table';
-import React, { useEffect, useState, useRef } from 'react';
-import { Form, Input, Table, Button, message, type MenuProps, Dropdown, Space, Modal } from 'antd';
-import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Form, Input, Table, Button, message, Select, Space } from 'antd';
+import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash-es';
 import ImportWorkAPI from '@/api/work-center';
+import PageResultAPI from '@/api/result';
 import type { PageState } from '@/types';
 import { convertDataJsonForTable } from '@/utils/index';
 import './index.less';
 
 interface DataType {
-  tableName: string;
-  status: string;
-  lineSucc: string;
-  DInsert: string;
-  oriPath: string;
+  id: number;
+  name: string;
+  role: string;
+  sex: string;
+  batchId: number;
+  instCode: string;
 }
-
 interface QueryParams {
-  tableName: string;
+  instCode: string;
+  batchId: string;
 }
-
+interface TypeOpts {
+  label: string;
+  value: string;
+}
 const defaultParams = {
   currentPage: 1,
-  totalCount: 0,
-  totalPage: 0,
-  isNext: false,
-  isLast: false,
+  totalCount: 1,
+  totalPage: 1,
+  isNext: true,
+  isLast: true,
   indexCount: 0,
   everyCount: 10,
-  indexList: [],
-  serviceName: 'importFileServiceTwoImpl',
+  serviceName: 'modelResultSumarryServiceImpl',
   conditionList: [],
   paramJson: '{}'
 };
 const defaultTableQuery = { current: 1, pageSize: 10 };
-const DataImport: React.FC = () => {
+const OrgClassifyStatistics: React.FC = () => {
   const [form] = Form.useForm();
   const [Height, setHeight] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -43,91 +47,55 @@ const DataImport: React.FC = () => {
   const [tableQuery, setTableQuery] = useState<PageState>(defaultTableQuery);
   const [whereStr, setWhereStr] = useState<QueryParams>();
   const [tableData, setTableData] = useState([]);
+  const [allBatchNoList, setAllBatchNoList] = useState<TypeOpts[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const columns: ColumnsType<DataType> = [
     {
-      title: '目标表名',
-      dataIndex: 'tableName',
+      title: '批次号',
+      dataIndex: 'batchId',
       ellipsis: true,
-      width: 200,
+      minWidth: 80,
       align: 'center',
-      render: (text: string, record: any) => `${text}@${record.tableDesc}`
+      fixed: 'left' as const
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      width: 150,
+      title: '模型名称',
+      dataIndex: 'ruleName',
+      minWidth: 200,
       align: 'center',
       ellipsis: true
     },
     {
-      title: '成功行数',
-      dataIndex: 'lineSucc',
-      width: 120,
+      title: '机构编号',
+      dataIndex: 'instCode',
+      minWidth: 120,
       align: 'center',
       ellipsis: true
     },
     {
-      title: '失败行数',
-      dataIndex: 'lineError',
-      width: 120,
+      title: '机构名称',
+      dataIndex: 'instName',
+      minWidth: 200,
       align: 'center',
       ellipsis: true
     },
     {
-      title: '写入时间',
-      dataIndex: 'DInsert',
-      width: 180,
+      title: '预警记录数',
+      dataIndex: 'allCount',
+      minWidth: 120,
       align: 'center',
       ellipsis: true
-    },
-    {
-      title: '原始路径',
-      dataIndex: 'oriPath',
-      width: 200,
-      align: 'center',
-      ellipsis: true
-    },
-    {
-      title: '错误信息',
-      width: 130,
-      align: 'center',
-      render: (_: any, record: any) => {
-        const items: MenuProps['items'] = [
-          {
-            key: '1',
-            label: '错误信息汇总',
-            disabled: Number(record.lineError) <= 0,
-            onClick: () => openErrInfo(record)
-          },
-          {
-            key: '2',
-            label: '下载错误文件',
-            disabled: Number(record.lineError) <= 0,
-            onClick: () => downloadFileByFileId(record)
-          }
-        ];
-
-        return (
-          <Dropdown menu={{ items }} placement='bottom'>
-            <Button type='link'>操作</Button>
-          </Dropdown>
-        );
-      }
     },
     {
       title: '操作',
-      width: 150,
+      width: 120,
       fixed: 'right' as const,
       align: 'center',
       render: (_: any, record: any) => (
         <Space>
           <Button type='link' onClick={() => openModal(record)}>
-            预览
-          </Button>
-          <Button type='link' danger onClick={() => handleDelete(record)}>
-            删除
+            详细
           </Button>
         </Space>
       )
@@ -137,7 +105,7 @@ const DataImport: React.FC = () => {
     if (containerRef.current && searchBarRef.current) {
       const searchBarHeight = searchBarRef.current.clientHeight;
       const parentHeight = containerRef.current.clientHeight;
-      setHeight(parentHeight - searchBarHeight - 200);
+      setHeight(parentHeight - searchBarHeight - 160);
     }
   };
   useEffect(() => {
@@ -146,6 +114,28 @@ const DataImport: React.FC = () => {
     return () => {
       window.removeEventListener('resize', setTableHeight);
     };
+  }, []);
+
+  const getAllBatchNoOpts = useCallback(async () => {
+    try {
+      const res: any = await PageResultAPI.getBatchIds();
+      if (res && res?.data) {
+        setAllBatchNoList(
+          res.data.map((batch: any) => ({
+            value: batch,
+            label: batch
+          })) || []
+        );
+      } else {
+        setAllBatchNoList([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    getAllBatchNoOpts();
   }, []);
 
   // 监听whereStr、tableQuery
@@ -160,6 +150,7 @@ const DataImport: React.FC = () => {
   // 开始查询
   const handleQuery = async () => {
     const formValues = await form.validateFields();
+    console.log(formValues, '【 handleQuery 】');
     setWhereStr(() => formValues);
   };
 
@@ -171,7 +162,7 @@ const DataImport: React.FC = () => {
       currentPage: tableQuery.current,
       everyCount: tableQuery.pageSize,
       indexCount: tableQuery.pageSize * (tableQuery.current - 1),
-      whereStr: whereStr?.tableName ? JSON.stringify(whereStr) : '{}'
+      whereStr: whereStr?.batchId || whereStr?.instCode ? JSON.stringify(whereStr) : '{}'
     };
     console.log('【 fetchData 】', param);
 
@@ -203,37 +194,19 @@ const DataImport: React.FC = () => {
     setTableQuery(cloneDeep(defaultTableQuery));
     setWhereStr(undefined);
   };
-  const openErrInfo = (record: any) => {
-    console.log(record);
-  };
-  const downloadFileByFileId = async (record: any) => {
-    console.log(record);
-  };
   const openModal = (record: any) => {
     console.log(record);
-  };
-  const handleDelete = (record: any) => {
-    Modal.confirm({
-      title: '确认删除吗？',
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => {
-        console.log('【 handleDelete 】', record);
-        message.success('删除成功');
-      }
-    });
-  };
-  const showImport = () => {
-    console.log('showImport');
-    // setShowImportModal(true);
   };
 
   return (
     <div className='app-container' ref={containerRef}>
       <div ref={searchBarRef} className='search-bar'>
         <Form form={form} layout='inline'>
-          <Form.Item name='tableName' label='目标表名'>
-            <Input placeholder='请输入目标表名' />
+          <Form.Item name='batchId' label='批次号'>
+            <Select options={allBatchNoList} placeholder='请选择批次号' allowClear style={{ width: 250 }} />
+          </Form.Item>
+          <Form.Item name='instCode' label='机构编号'>
+            <Input placeholder='请输入机构编号' />
           </Form.Item>
           <Form.Item>
             <Button type='primary' icon={<SearchOutlined />} onClick={handleQuery}>
@@ -246,13 +219,8 @@ const DataImport: React.FC = () => {
         </Form>
       </div>
       <div className='content-body'>
-        <div className='mb10'>
-          <Button color='green' variant='solid' icon={<PlusOutlined />} onClick={showImport}>
-            本地导入
-          </Button>
-        </div>
         <Table<DataType>
-          rowKey={record => `${record.tableName}_${record.DInsert}`}
+          rowKey={(row, idx) => `${idx}${row.batchId}_${row.instCode}`}
           columns={columns}
           dataSource={tableData}
           scroll={{ y: Height }}
@@ -271,4 +239,5 @@ const DataImport: React.FC = () => {
     </div>
   );
 };
-export default DataImport;
+
+export default OrgClassifyStatistics;
