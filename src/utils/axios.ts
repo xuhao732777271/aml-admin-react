@@ -63,7 +63,7 @@ service.interceptors.response.use((response: AxiosResponse) => {
   if (!response.data) return;
 
   // if (Reflect.has(response.data, 'code')) {
-  //   // 配套 Java 后端jeecg-boot
+  //   // 配套 Java 后端aml-boot
   //   const { code, result, msg } = response.data
   //   if ([ResultEnum.SUCCESS, ResultEnum.SUCCESS_CODE].includes(code)) {
   //     return response.data
